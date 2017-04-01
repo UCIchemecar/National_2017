@@ -175,13 +175,22 @@ void unifiedSensorAPIRead(void)
 void loop()
 {
  /*********Stopping code************/
- uint32_t lum = tsl.getFullLuminosity();
+ static float total2;
+  static float total1;
+  uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
   static unsigned long t0=0; //the time that liquid was stabilized
   static unsigned long t1=0; //the time that the liquid went dark
   static unsigned long t00=0;
-  static unsigned long time2=0
+  static unsigned long time2=0;
   static unsigned long time1=0; //time it takes for the liquid to go from injected to dark
+  static unsigned long totalRuntime=120000;
+  static unsigned long tRun1=0;//start of run time
+  static unsigned long tRun2=0;//end of run time
+  int j=PololuWheelEncoders::getCountsAndResetM2();
+  int i=PololuWheelEncoders::getCountsAndResetM1();
+  total2=total2+abs(j/3591.84);
+  total1=total1+abs(i/3591.84);
   static int f1=0; // flag to indicate phase, phase 0 is the default where nothing has happened. 
   ir = lum >> 16;
   full = lum & 0xFFFF;
@@ -201,11 +210,12 @@ void loop()
   {
     //liquid has turned dark
     t1=millis();
-    time1=t1-t0;  
-    time2=t1-t00;
+    time1=t1-t0;//time since stabilization
+    time2=t1-t00;//time since injection
     if (time1>10000)
     {
       f1=3;
+      totalRuntime=time1;
     }
     
   }
@@ -213,7 +223,8 @@ void loop()
   Serial.print(a); Serial.print("             "); 
   Serial.print(t0);  Serial.print("                                 "); 
   Serial.print(t1); Serial.print("                              "); 
-  Serial.println(time1);
+  Serial.print(time1);  Serial.print("    ");
+  Serial.println(time2);
   
   /***********Motor code*************/
   if(f1==3)
@@ -226,4 +237,39 @@ void loop()
     md.setM1Speed(306);
     md.setM2Speed(325);
   }
+  /**********Alternate motor code that used motor run time*************/
+  
+  /*
+  j=PololuWheelEncoders::getCountsAndResetM2();
+  i=PololuWheelEncoders::getCountsAndResetM1();
+  if(i==0 && j==0 && tRun1==0 && totalRuntime==0)
+  {
+    md.setM1Speed(306);
+    md.setM2Speed(325);
+  }
+  else if(i>0 && j>0 && tRun1==0 && totalRuntime==0)
+  {
+    tRun1==millis();
+    md.setM1Speed(306);
+    md.setM2Speed(325);
+  }
+  else if (tRun1!=0 && totalRuntime==0)
+  {
+    md.setM1Speed(306);
+    md.setM2Speed(325);
+  }
+  else if (tRun1!=0 && totalRuntime!=0)
+  {
+    if(millis()-tRun1>totalRuntime)
+    {
+    md.setM1Speed(0);
+    md.setM2Speed(0);
+    }
+    else
+    {
+    md.setM1Speed(306);
+    md.setM2Speed(325);
+    }
+  }
+  */
 }
