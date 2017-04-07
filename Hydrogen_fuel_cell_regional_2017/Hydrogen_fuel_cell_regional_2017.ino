@@ -178,8 +178,8 @@ void loop()
  static float total2;
   static float total1;
   static int f2=0;// flag for marking the car starts running physically 
-  static int m1=394;
-  static int m2=400;
+  static int m1=400;
+  static int m2=385;
   uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
   static unsigned long t0=0; //the time that liquid was stabilized
