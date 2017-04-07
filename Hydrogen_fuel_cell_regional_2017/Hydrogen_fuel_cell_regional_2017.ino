@@ -177,6 +177,8 @@ void loop()
  /*********Stopping code************/
  static float total2;
   static float total1;
+  static int m1=380;
+  static int m2=400;
   uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
   static unsigned long t0=0; //the time that liquid was stabilized
@@ -184,13 +186,9 @@ void loop()
   static unsigned long t00=0;
   static unsigned long time2=0;
   static unsigned long time1=0; //time it takes for the liquid to go from injected to dark
-  static unsigned long totalRuntime=120000;
+  static unsigned long totalRuntime=0;
   static unsigned long tRun1=0;//start of run time
   static unsigned long tRun2=0;//end of run time
-  int j=PololuWheelEncoders::getCountsAndResetM2();
-  int i=PololuWheelEncoders::getCountsAndResetM1();
-  total2=total2+abs(j/3591.84);
-  total1=total1+abs(i/3591.84);
   static int f1=0; // flag to indicate phase, phase 0 is the default where nothing has happened. 
   ir = lum >> 16;
   full = lum & 0xFFFF;
@@ -227,6 +225,7 @@ void loop()
   Serial.println(time2);
   
   /***********Motor code*************/
+  /*
   if(f1==3)
   {
     md.setM1Speed(0);
@@ -234,29 +233,33 @@ void loop()
   }
   else
   {
-    md.setM1Speed(370);
-    md.setM2Speed(390);
+    md.setM1Speed(380);
+    md.setM2Speed(400);
   }
+  */
   /**********Alternate motor code that used motor run time*************/
   
-  /*
-  j=PololuWheelEncoders::getCountsAndResetM2();
-  i=PololuWheelEncoders::getCountsAndResetM1();
+  
+  int j=PololuWheelEncoders::getCountsAndResetM2();
+  int i=PololuWheelEncoders::getCountsAndResetM1();
   if(i==0 && j==0 && tRun1==0 && totalRuntime==0)
   {
-    md.setM1Speed(306);
-    md.setM2Speed(325);
+    md.setM1Speed(m1);
+    md.setM2Speed(m2);
+    Serial.println("It has not run");
   }
   else if(i>0 && j>0 && tRun1==0 && totalRuntime==0)
   {
     tRun1==millis();
-    md.setM1Speed(306);
-    md.setM2Speed(325);
+    md.setM1Speed(m1);
+    md.setM2Speed(m2);
+    Serial.println("It started running");
   }
   else if (tRun1!=0 && totalRuntime==0)
   {
-    md.setM1Speed(306);
-    md.setM2Speed(325);
+    md.setM1Speed(m1);
+    md.setM2Speed(m2);
+    Serial.println("Stopping Reaction has not finished");
   }
   else if (tRun1!=0 && totalRuntime!=0)
   {
@@ -264,12 +267,14 @@ void loop()
     {
     md.setM1Speed(0);
     md.setM2Speed(0);
+    Serial.println("Stopping Reaction has finished run time has reached");
     }
     else
     {
-    md.setM1Speed(306);
-    md.setM2Speed(325);
+    md.setM1Speed(m1);
+    md.setM2Speed(m2);
+    Serial.println("Stopping Reaction has finished but run time has not reached");
     }
   }
-  */
+  
 }
