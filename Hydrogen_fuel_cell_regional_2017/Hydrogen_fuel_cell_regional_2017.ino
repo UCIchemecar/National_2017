@@ -182,6 +182,8 @@ void loop()
   static int m2=385;
   uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
+  static float distance=0;// distance the car will travel at the given speed in meters
+  static float sp=0.55; // The speed of the car in m/s
   static unsigned long t0=0; //the time that liquid was stabilized
   static unsigned long t1=0; //the time that the liquid went dark
   static unsigned long t00=0;
@@ -222,8 +224,10 @@ void loop()
   Serial.print(a); Serial.print("             "); 
   Serial.print(t0);  Serial.print("                                 "); 
   Serial.print(t1); Serial.print("                              "); 
-  Serial.print(time1);  Serial.print("    ");
-  Serial.println(time2);
+  Serial.print(time1);  Serial.print("    ms        ");
+  //Serial.print(time2); 
+  distance=sp*time1;
+  Serial.print(distance); Serial.println("    m");
   
   /***********Motor code*************/
   /*
