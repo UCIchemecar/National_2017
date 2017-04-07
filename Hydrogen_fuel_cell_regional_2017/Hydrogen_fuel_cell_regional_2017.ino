@@ -177,7 +177,7 @@ void loop()
  /*********Stopping code************/
  static float total2;
   static float total1;
-  static int f1=0;// flag for marking the car starts running physically 
+  static int f2=0;// flag for marking the car starts running physically 
   static int m1=394;
   static int m2=400;
   uint32_t lum = tsl.getFullLuminosity();
@@ -249,9 +249,9 @@ void loop()
     md.setM2Speed(m2);
     Serial.println("It has not run");
   }
-  else if(i>20 && j>20 && tRun1==0 && totalRuntime==0 && f1==0)
+  else if(i>20 && j>20 && tRun1==0 && totalRuntime==0 && f2==0)
   {
-    f1=1;
+    f2=1;
     tRun1==millis();
     md.setM1Speed(m1);
     md.setM2Speed(m2);
