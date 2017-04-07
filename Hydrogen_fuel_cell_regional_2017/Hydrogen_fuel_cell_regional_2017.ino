@@ -234,8 +234,8 @@ void loop()
   }
   else
   {
-    md.setM1Speed(306);
-    md.setM2Speed(325);
+    md.setM1Speed(370);
+    md.setM2Speed(390);
   }
   /**********Alternate motor code that used motor run time*************/
   
