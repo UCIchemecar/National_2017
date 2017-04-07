@@ -39,8 +39,8 @@ void configureSensor(void)
   // You can change the gain on the fly, to adapt to brighter/dimmer light situations
   //tsl.setGain(TSL2591_GAIN_LOW);    // 1x gain (bright light)
   //tsl.setGain(TSL2591_GAIN_MED);      // 25x gain
-  //tsl.setGain(TSL2591_GAIN_HIGH);
-  tsl.setGain(TSL2591_GAIN_MAX); // 428x gain
+  tsl.setGain(TSL2591_GAIN_HIGH);
+  //tsl.setGain(TSL2591_GAIN_MAX); // 428x gain
   
   // Changing the integration time gives you a longer time over which to sense light
   // longer timelines are slower, but are good in very low light situtations!
@@ -194,7 +194,7 @@ void loop()
   full = lum & 0xFFFF;
   unsigned int a=tsl.calculateLux(full, ir);
   
-  if(a<40000 && millis()>=200 && f1==0)
+  if((a<40000 || a>64621) && millis()>=200 && f1==0)
   {
     f1=1;//liquid has been injected. 
     t00=millis();
