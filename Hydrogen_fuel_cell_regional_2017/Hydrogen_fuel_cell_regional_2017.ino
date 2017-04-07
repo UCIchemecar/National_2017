@@ -194,7 +194,7 @@ void loop()
   full = lum & 0xFFFF;
   unsigned int a=tsl.calculateLux(full, ir);
   
-  if((a<40000 || a>64621) && millis()>=200 && f1==0)
+  if(a<40000 && millis()>=200 && f1==0)
   {
     f1=1;//liquid has been injected. 
     t00=millis();
