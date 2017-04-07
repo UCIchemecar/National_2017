@@ -248,7 +248,7 @@ void loop()
     md.setM2Speed(m2);
     Serial.println("It has not run");
   }
-  else if(i>0 && j>0 && tRun1==0 && totalRuntime==0)
+  else if(i>20 && j>20 && tRun1==0 && totalRuntime==0)
   {
     tRun1==millis();
     md.setM1Speed(m1);
@@ -263,7 +263,7 @@ void loop()
   }
   else if (tRun1!=0 && totalRuntime!=0)
   {
-    if(millis()-tRun1>totalRuntime)
+    if((millis()-tRun1)>totalRuntime)
     {
     md.setM1Speed(0);
     md.setM2Speed(0);
