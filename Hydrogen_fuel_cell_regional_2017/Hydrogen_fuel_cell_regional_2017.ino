@@ -178,8 +178,8 @@ void loop()
  static float total2;
   static float total1;
   static int f2=0;// flag for marking the car starts running physically 
-  static int m1=400;
-  static int m2=385;
+  static int m1=390;
+  static int m2=375;
   uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
   static float distance=0;// distance the car will travel at the given speed in meters
