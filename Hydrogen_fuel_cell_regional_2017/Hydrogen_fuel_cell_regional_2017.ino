@@ -220,6 +220,7 @@ void loop()
     }
     
   }
+  /*
   Serial.print(millis()); Serial.print("          "); 
   Serial.print(a); Serial.print("             "); 
   Serial.print(t0);  Serial.print("                                 "); 
@@ -227,8 +228,8 @@ void loop()
   Serial.print(time1);  Serial.print("    ms        ");
   //Serial.print(time2); 
   distance=sp*time1;
-  Serial.print(distance); Serial.println("    m");
-  
+  Serial.print(distance); Serial.println("    m   ");
+  */
   /***********Motor code*************/
   /*
   if(f1==3)
@@ -245,29 +246,29 @@ void loop()
   /**********Alternate motor code that used motor run time*************/
   
   
-  int j=PololuWheelEncoders::getCountsAndResetM2();
   int i=PololuWheelEncoders::getCountsAndResetM1();
-  if(i==0 && j==0 && tRun1==0 && totalRuntime==0)
+  total1=total1+abs(i/3591.84);
+  if(total1==0 && tRun1==0 && totalRuntime==0)
   {
     md.setM1Speed(m1);
     md.setM2Speed(m2);
     Serial.println("It has not run");
   }
-  else if(i>20 && j>20 && tRun1==0 && totalRuntime==0 && f2==0)
+  if(total1>0.1 && f2==0)
   {
     f2=1;
-    tRun1==millis();
+    tRun1=millis();
     md.setM1Speed(m1);
     md.setM2Speed(m2);
     Serial.println("It started running");
   }
-  else if (tRun1!=0 && totalRuntime==0)
+  if (tRun1>0 && totalRuntime==0)
   {
     md.setM1Speed(m1);
     md.setM2Speed(m2);
     Serial.println("Stopping Reaction has not finished");
   }
-  else if (tRun1!=0 && totalRuntime!=0)
+  if (tRun1>0 && totalRuntime>0)
   {
     if((millis()-tRun1)>totalRuntime)
     {
@@ -275,12 +276,19 @@ void loop()
     md.setM2Speed(0);
     Serial.println("Stopping Reaction has finished run time has reached");
     }
-    else
+    else if(millis()-tRun1<totalRuntime)
     {
     md.setM1Speed(m1);
     md.setM2Speed(m2);
     Serial.println("Stopping Reaction has finished but run time has not reached");
     }
+    else
+    {
+      Serial.println("Outlier");
+      md.setM1Speed(0);
+    md.setM2Speed(0);
+    }
   }
-  
+  Serial.print(total1); Serial.print("    rotation    ");
+  Serial.println(tRun1);
 }
