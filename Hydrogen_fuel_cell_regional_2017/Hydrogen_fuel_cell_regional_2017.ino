@@ -220,7 +220,7 @@ void loop()
     }
     
   }
-  /*
+  
   Serial.print(millis()); Serial.print("          "); 
   Serial.print(a); Serial.print("             "); 
   Serial.print(t0);  Serial.print("                                 "); 
@@ -229,7 +229,7 @@ void loop()
   //Serial.print(time2); 
   distance=sp*time1;
   Serial.print(distance); Serial.println("    m   ");
-  */
+  
   /***********Motor code*************/
   /*
   if(f1==3)
