@@ -179,6 +179,8 @@ void loop()
   static float total1;
   static int f2=0;// flag for marking the car starts running physically 
   static int m1=390;
+  static int count6=0;//count the amount of times the sensor has detected 63534
+  static int countd=0;//count the amount of times the solution has gone dark
   static int m2=375;
   uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
@@ -204,21 +206,36 @@ void loop()
   }
   if(f1==1 && a>40000)
   {
-    f1=2;//liquid has been stabilized 
-    t0=millis();
+    if(count6==0)
+    {
+      t0=millis();
+    }
+    if(count6>5)
+    {
+       f1=2;//liquid has been stabilized
+    }
+     ++count6;
+  }
+  if(f1==1 && a<40000)
+  {
+    t0=0;//reset variables if the stabilization was not continuous
+    count6=0;
   }
   if(f1==2 && a<40000)
   {
     //liquid has turned dark
+    if(countd==0)
+    {
     t1=millis();
+    }
     time1=t1-t0;//time since stabilization
     time2=t1-t00;//time since injection
-    if (time1>10000)
+    if (time1>10000 && countd>5)
     {
       f1=3;
       totalRuntime=time1;
     }
-    
+    ++countd;
   }
   
   Serial.print(millis()); Serial.print("          "); 
@@ -227,7 +244,7 @@ void loop()
   Serial.print(t1); Serial.print("                              "); 
   Serial.print(time1);  Serial.print("    ms        ");
   //Serial.print(time2); 
-  distance=sp*time1;
+  distance=sp*time1/1000.0;
   Serial.print(distance); Serial.println("    m   ");
   
   /***********Motor code*************/
