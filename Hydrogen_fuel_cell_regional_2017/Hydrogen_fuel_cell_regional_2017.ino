@@ -178,14 +178,14 @@ void loop()
  static float total2;
   static float total1;
   static int f2=0;// flag for marking the car starts running physically 
-  static int m1=390;//adjust for speed of motor 1
-  static int m2=375;// adjust for speed of motor 2
+  static int m1=393;//adjust for speed of motor 1
+  static int m2=372;// adjust for speed of motor 2
   static int count6=0;//count the amount of times the sensor has detected 63534
   static int countd=0;//count the amount of times the solution has gone dark
   uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
   static float distance=0;// distance the car will travel at the given speed in meters
-  static float sp=0.55; // The speed of the car in m/s
+  static float sp=0.52; // The speed of the car in m/s
   static unsigned long t0=0; //the time that liquid was stabilized
   static unsigned long t1=0; //the time that the liquid went dark
   static unsigned long t00=0;
