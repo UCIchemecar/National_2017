@@ -1,4 +1,4 @@
-#include "DualMC33926MotorShield.h"
+  #include "DualMC33926MotorShield.h"
 #include <PololuWheelEncoders.h>
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -185,7 +185,7 @@ void loop()
   uint32_t lum = tsl.getFullLuminosity();
   uint16_t ir, full;
   static float distance=0;// distance the car will travel at the given speed in meters
-  static float sp=0.52; // The speed of the car in m/s
+  static float sp=0.54; // The speed of the car in m/s
   static unsigned long t0=0; //the time that liquid was stabilized
   static unsigned long t1=0; //the time that the liquid went dark
   static unsigned long t00=0;
@@ -244,7 +244,7 @@ void loop()
   Serial.print(t1); Serial.print("                              "); 
   Serial.print(time1);  Serial.print("    ms        ");
   //Serial.print(time2); 
-  distance=sp*time1/1000.0;
+  distance=(sp*time1/1000.0)-0.322;
   Serial.print(distance); Serial.println("    m   ");
   
   /***********Motor code*************/
