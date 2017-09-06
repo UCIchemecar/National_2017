@@ -235,7 +235,8 @@ void loop()
       f1=3;
       totalRuntime=time1;
     }
-    ++countd;
+    ++countd;15.32
+    
   }
   
   Serial.print(millis()); Serial.print("          "); 
