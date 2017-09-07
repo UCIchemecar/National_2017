@@ -194,11 +194,10 @@ void loop()
   static boolean car_moved=false; // flag to indicate phase, 1 for liquid injected, 2 for stabilized, 3 for finished reaction.
   static float total1;//total amount of rotation for motor 1
   static unsigned long totalRuntime=0;//amount of time the car has been running
-  static unsigned long tRun1=0;//start of run time
-  static unsigned long tRun2=0;//end of run time
+  static unsigned long car_start_time=0;//time when the wheel first moves
 
   //Reaction variables
-  static int count6=0;//count the amount of times the sensor has detected 63534
+  static int count6=0;//count the amount of times the sensor has detected the light from the white LED after the reaction has stabilized
   static int countd=0;//count the amount of times the solution has gone dark
   static unsigned long t_stabilized=0; //the time that liquid was stabilized
   static unsigned long t_dark=0; //the time that the liquid went dark
@@ -278,7 +277,7 @@ void loop()
 
   //Determining the phase of movement
 
-  if(!total1 && !tRun1 && !totalRuntime)
+  if(!total1 && !car_start_time && !totalRuntime)
   {
     md.setM1Speed(motor1_speed);
     md.setM2Speed(motor2_speed);
@@ -288,28 +287,28 @@ void loop()
   if(total1>0.1 && !car_moved)
   {
     car_moved=!car_moved;
-    tRun1=millis();
+    car_start_time=millis();
     md.setM1Speed(motor1_speed);
     md.setM2Speed(motor2_speed);
     Serial.println("It started running");
   }
 
-  if (tRun1>0 && !totalRuntime)
+  if (car_start_time>0 && !totalRuntime)
   {
     md.setM1Speed(motor1_speed);
     md.setM2Speed(motor2_speed);
     Serial.println("Stopping Reaction has not finished");
   }
 
-  if (tRun1>0 && totalRuntime>0)
+  if (car_start_time>0 && totalRuntime>0)
   {
-    if((millis()-tRun1)>totalRuntime)
+    if((millis()-car_start_time)>totalRuntime)
     {
     md.setM1Speed(0);
     md.setM2Speed(0);
     Serial.println("Stopping Reaction has finished run time has reached");
     }
-    else if((millis()-tRun1)<totalRuntime)
+    else if((millis()-car_start_time)<totalRuntime)
     {
     md.setM1Speed(motor1_speed);
     md.setM2Speed(motor2_speed);
@@ -324,5 +323,5 @@ void loop()
   }
 
   Serial.print(total1); Serial.print("    rotation    ");
-  Serial.println(tRun1);
+  Serial.println(car_start_time);
 }
