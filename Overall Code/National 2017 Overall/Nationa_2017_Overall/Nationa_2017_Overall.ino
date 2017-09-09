@@ -12,9 +12,9 @@
 #include "Adafruit_TSL2591.h"//TSL2591 library
 
 #define Motor_Tick_per_rotation 3591.84
-#define motor1_speed 393//adjust for speed of motor 1
-#define motor2_speed 372//adjust for speed of motor 2
-#define car_speed 0.54//speed of the car
+#define motor1_speed 393//adjust for speed of motor 1, out of 400
+#define motor2_speed 372//adjust for speed of motor 2, out of 400
+#define car_speed 0.54//speed of the car in m/s
 
 DualMC33926MotorShield md;
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591);
@@ -205,8 +205,8 @@ void loop()
         static unsigned long t_stabilized               =0; //the time that liquid was stabilized
         static unsigned long t_dark                     =0; //the time that the liquid went dark
         static unsigned long t_injected                 =0; //mark when liquid was injected
-        static unsigned long dur_injected               =0; //time since injection
-        static unsigned long dur_injected_to_stabilized =0; //time it takes for the liquid to go from injected to stabilized
+        static unsigned long dur_injected               =0; //time since injection in milliseconds
+        static unsigned long dur_injected_to_stabilized =0; //time it takes for the liquid to go from injected to stabilized in milliseconds
         static int flag_reaction                        =0; //flags for indicating the phase of the reaction
 
         /*Light Sensor measurement*/
