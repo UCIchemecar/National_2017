@@ -1,7 +1,4 @@
-/*
- * Written for use in National Competition 2017 with hydrogen fuel cell and
- * Sodium Thiosulfate Reaction
- */
+/*Functions taken from Adafruit and Pololu's examples and were modified with reaction code for complete car control code*/
 
 
 
