@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 /*Functions taken from Adafruit and Pololu's examples and were modified with reaction code for complete car control code*/
+=======
+/*
+ * Written for use in National Competition 2017 with hydrogen fuel cell and
+ * Sodium Thiosulfate Reaction with functions taken from example code in Adafruit and Pololu github libraries
+ */
+>>>>>>> b012b437ec32f4d8a1735be6c1864e73a6350a52
 
-
+/*pololu shield github example: https://github.com/pololu/dual-mc33926-motor-shield/blob/master/examples/Demo/Demo.ino*/ 
+/*Adafruit sensor github example: https://github.com/adafruit/Adafruit_TSL2591_Library/tree/master/examples*/
 
 #include "DualMC33926MotorShield.h"//Pololu shield library, available on ChemE car github account
 #include <PololuWheelEncoders.h>//Pololu encoder for the motors, available on ChemE car github account
@@ -15,7 +23,7 @@
 
 DualMC33926MotorShield md;
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591);
-void stopIfFault()
+void stopIfFault()//Pololu's function to check if anything happened to the shield
 {
         if (md.getFault())
         {
@@ -23,7 +31,7 @@ void stopIfFault()
                 while(1) ;
         }
 }
-void displaySensorDetails(void)
+void displaySensorDetails(void)//Adafruit's function to display sensor's detail 
 {
         sensor_t sensor;
         tsl.getSensor(&sensor);
@@ -44,7 +52,7 @@ void displaySensorDetails(void)
     Configures the gain and integration time for the TSL2591
  */
 /**************************************************************************/
-void configureSensor(void)
+void configureSensor(void)//Adafruit's function to configure settings on the sensor
 {
         // You can change the gain on the fly, to adapt to brighter/dimmer light situations
         //tsl.setGain(TSL2591_GAIN_LOW);    // 1x gain (bright light)
@@ -120,7 +128,7 @@ void setup(void)
         md.init();
         PololuWheelEncoders::init(3,5,6,11);
 }
-void simpleRead(void)
+void simpleRead(void)//Adafruit's function to display basic light information
 {
         // Simple data read example. Just read the infrared, fullspecrtrum diode
         // or 'visible' (difference between the two) channels.
@@ -139,7 +147,7 @@ void simpleRead(void)
     Show how to read IR and Full Spectrum at once and convert to lux
  */
 /**************************************************************************/
-void advancedRead(void)
+void advancedRead(void)//Adafruit's function to display all sensor's reading
 {
         // More advanced data read example. Read 32 bits with top 16 bits IR, bottom 16 bits full spectrum
         // That way you can do whatever math and comparisons you want!
@@ -159,7 +167,7 @@ void advancedRead(void)
     Performs a read using the Adafruit Unified Sensor API.
  */
 /**************************************************************************/
-void unifiedSensorAPIRead(void)
+void unifiedSensorAPIRead(void)//General Adafruit's API 
 {
         /* Get a new sensor event */
         sensors_event_t event;
@@ -186,7 +194,7 @@ void loop()
 {
 
         //Sensor Variables
-        uint32_t lum                                    = tsl.getFullLuminosity();
+        uint32_t lum                                    = tsl.getFullLuminosity();//come from the Adafruit's example
         uint16_t ir, full;
 
         //Motor Variables
@@ -206,7 +214,7 @@ void loop()
         static unsigned long dur_injected_to_stabilized =0; //time it takes for the liquid to go from injected to stabilized in milliseconds
         static int flag_reaction                        =0; //flags for indicating the phase of the reaction
 
-        /*Light Sensor measurement*/
+        /*Light Sensor measurement, come from the Adafruit's example but without all the println*/
         ir = lum >> 16;
         full = lum & 0xFFFF;
         unsigned int light_level=tsl.calculateLux(full, ir);
