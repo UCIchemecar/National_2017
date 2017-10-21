@@ -1,11 +1,11 @@
-//<<<<<<< HEAD
+<<<<<<< HEAD
 /*Functions taken from Adafruit and Pololu's examples and were modified with reaction code for complete car control code*/
-/*=======*/
+=======
 /*
  * Written for use in National Competition 2017 with hydrogen fuel cell and
  * Sodium Thiosulfate Reaction with functions taken from example code in Adafruit and Pololu github libraries
  */
-//>>>>>>> b012b437ec32f4d8a1735be6c1864e73a6350a52
+>>>>>>> b012b437ec32f4d8a1735be6c1864e73a6350a52
 
 /*pololu shield github example: https://github.com/pololu/dual-mc33926-motor-shield/blob/master/examples/Demo/Demo.ino*/
 /*Adafruit sensor github example: https://github.com/adafruit/Adafruit_TSL2591_Library/tree/master/examples*/
@@ -17,9 +17,9 @@
 #include "Adafruit_TSL2591.h"//TSL2591 library
 
 #define Motor_Tick_per_rotation 3591.84
-#define motor1_speed 319//adjust for speed of motor 1, out of 400
-#define motor2_speed 307//adjust for speed of motor 2, out of 400
-#define car_speed 0.39//speed of the car in m/s
+#define motor1_speed 399//adjust for speed of motor 1, out of 400
+#define motor2_speed 369//adjust for speed of motor 2, out of 400
+#define car_speed 0.54//speed of the car in m/s
 
 DualMC33926MotorShield md;
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591);
@@ -216,7 +216,7 @@ void loop()
         static double t_speed_initial = 0; //time started to track velocity
         static double t_speed_final = 0; //time ended tracking velocity
         static double t_speed_total = 0; //time used to track velocity
-        static double s= 0; // velocity of car
+        static double speed = 0; // velocity of car
         static double d_initial = 0; // distance used take initial
         static double d_final = 0; // distance used taken at ended
         static double d_total = 0; //total distance used for speed
@@ -234,7 +234,6 @@ void loop()
         {
                 flag_reaction=1;//liquid has been injected.
                 t_injected=millis();
-                Serial.println("There was an injection");
         }
 
         //Phase 2: Injection was dectected, the code will now search for stabilization
@@ -244,10 +243,10 @@ void loop()
                 {
                         t_stabilized=millis();//mark the beginning of stabilization, will be reset if unstable
                 }
-                if(count6>6)
+                if(count6>8)
                 {
                         flag_reaction=2;//liquid has been stabilized
-                        Serial.println("Reaction has stabilized");
+                        Serial.println("Reaction has stabilized")
                 }
                 ++count6;
         }
@@ -260,7 +259,7 @@ void loop()
         //Phase 3: Stabilization reached, searching for the darkening of the solution
         if(flag_reaction==2 && light_level<40000)
         {
-                Serial.println("Reaction went dark"); //Debug line
+                Serial.println("Reaction has gone dark"); //Debug line
                 //liquid has turned dark
                 if(countd==0)
                 {
@@ -279,12 +278,11 @@ void loop()
         /*Diagnostic and Prediction Code*/
         Serial.print(millis()); Serial.print("          ");
         Serial.print(light_level); Serial.print("             ");
-        Serial.print(t_injected); Serial.print("            ");
-        Serial.print(t_stabilized);  Serial.print("             ");
+        Serial.print(t_stabilized);  Serial.print("                                 ");
         Serial.print(t_dark); Serial.print("                              ");
         Serial.print(dur_injected_to_stabilized);  Serial.print("    ms        ");
 
-        distance=(car_speed*dur_injected_to_stabilized/1000.0)-0.322 + 1.45;//Formula for calculating run distance in meters. This is only a prediction
+        distance=(car_speed*dur_injected_to_stabilized/1000.0)-0.322;//Formula for calculating run distance in meters. This is only a prediction
 
         Serial.print(distance); Serial.println("    m   ");
 
@@ -316,13 +314,13 @@ void loop()
         }
         t_speed_final = millis();
         t_speed_total = t_speed_final - t_speed_initial;
-        if (t_speed_total > 1000)
+        if (t_speed_total > 10000)
         {
                 t_speed_total = t_speed_total / 1000.0;
                 d_final = total1 * 80.0 / 1000.0 * 3.14159;
                 d_total = d_final - d_initial;
-                s = d_total / t_speed_total;
-                t_speed_initial = millis();
+                speed = d_total / t_speed_total;
+                t_speed_inital = millis();
                 d_initial = total1 * 80.0 / 1000.0 * 3.14159;
         }
         if (car_start_time>0 && !totalRuntime)
@@ -356,5 +354,4 @@ void loop()
 
         Serial.print(total1); Serial.print("    rotation    ");
         Serial.println(car_start_time);
-        Serial.println(s); Serial.println("      m/s       ");
 }
