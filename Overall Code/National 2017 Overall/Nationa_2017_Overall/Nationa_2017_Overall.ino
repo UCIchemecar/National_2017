@@ -11,8 +11,8 @@
 /*Adafruit sensor github example: https://github.com/adafruit/Adafruit_TSL2591_Library/tree/master/examples*/
 
 #include "DualMC33926MotorShield.h"//Pololu shield library, available on ChemE car github account
-#include <PololuWheelEncoders.h>//Pololu encoder for the motors, available on ChemE car github account
 #include <Wire.h>
+
 #include <Adafruit_Sensor.h>//Adafruit unified sensor library
 #include "Adafruit_TSL2591.h"//TSL2591 library
 
@@ -103,7 +103,7 @@ void configureSensor(void)//Adafruit's function to configure settings on the sen
 void setup(void)
 {
         Serial.begin(115200);
-
+        pinMode(A3, INPUT);
         Serial.println("Starting Adafruit TSL2591 Test!");
 
         if (tsl.begin())
@@ -126,7 +126,6 @@ void setup(void)
 
         Serial.println("Dual MC33926 Motor Shield");
         md.init();
-        PololuWheelEncoders::init(3,5,6,11);
 }
 void simpleRead(void)//Adafruit's function to display basic light information
 {
@@ -200,7 +199,7 @@ void loop()
         //Motor Variables
         static float distance                           =0;// distance the car will travel at the given speed in meters
         static boolean car_moved                        =false; // flag to indicate phase, 1 for liquid injected, 2 for stabilized, 3 for finished reaction.
-        static float total1; //total amount of rotation for motor 1
+
         static unsigned long totalRuntime               =0; //amount of time the car has been running
         static unsigned long car_start_time             =0; //time when the wheel first moves
 
@@ -213,13 +212,7 @@ void loop()
         static unsigned long dur_injected               =0; //time since injection in milliseconds
         static unsigned long dur_injected_to_stabilized =0; //time it takes for the liquid to go from injected to stabilized in milliseconds
         static int flag_reaction                        =0; //flags for indicating the phase of the reaction
-        static double t_speed_initial = 0; //time started to track velocity
-        static double t_speed_final = 0; //time ended tracking velocity
-        static double t_speed_total = 0; //time used to track velocity
-        static double s= 0; // velocity of car
-        static double d_initial = 0; // distance used take initial
-        static double d_final = 0; // distance used taken at ended
-        static double d_total = 0; //total distance used for speed
+
 
 
         /*Light Sensor measurement, come from the Adafruit's example but without all the println*/
@@ -291,40 +284,28 @@ void loop()
 
         /************************Motor Control Code***********************/
 
-        //Encoder Measurement
-        int i=PololuWheelEncoders::getCountsAndResetM1();
-        total1=total1+abs(i/Motor_Tick_per_rotation);//Amount of rotation on Motor 1, used only for sensing whether the car moved.
+
 
         //Determining the phase of movement
 
-        if(!total1 && !car_start_time && !totalRuntime)
+        if(analogRead(A3) < 500 && !car_start_time && !totalRuntime)
         {
                 md.setM1Speed(motor1_speed);
                 md.setM2Speed(motor2_speed);
                 Serial.println("It has not run");
         }
 
-        if(total1>0.1 && !car_moved)
+        if(analogRead(A3) > 500 && !car_moved)
         {
                 car_moved=!car_moved;
                 car_start_time=millis();
-                d_initial =  total1 * 80.0 / 1000.0 * 3.14159;
+
                 md.setM1Speed(motor1_speed);
                 md.setM2Speed(motor2_speed);
                 Serial.println("It started running");
-                t_speed_initial=millis();
+
         }
-        t_speed_final = millis();
-        t_speed_total = t_speed_final - t_speed_initial;
-        if (t_speed_total > 1000)
-        {
-                t_speed_total = t_speed_total / 1000.0;
-                d_final = total1 * 80.0 / 1000.0 * 3.14159;
-                d_total = d_final - d_initial;
-                s = d_total / t_speed_total;
-                t_speed_initial = millis();
-                d_initial = total1 * 80.0 / 1000.0 * 3.14159;
-        }
+
         if (car_start_time>0 && !totalRuntime)
         {
                 md.setM1Speed(motor1_speed);
@@ -354,7 +335,7 @@ void loop()
                 }
         }
 
-        Serial.print(total1); Serial.print("    rotation    ");
+
         Serial.println(car_start_time);
-        Serial.println(s); Serial.println("      m/s       ");
+
 }
