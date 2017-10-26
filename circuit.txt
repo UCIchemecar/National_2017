@@ -1,0 +1,3 @@
+Analog pin #3 is now being used to sense if the hydrogen fuel cell is providing power.
+The pin method seems to have no issues with tracking whether or not the car has moved.
+No changes could be observed from the previous method
