@@ -16,7 +16,7 @@
 #include <Adafruit_Sensor.h>//Adafruit unified sensor library
 #include "Adafruit_TSL2591.h"//TSL2591 library
 
-#define Motor_Tick_per_rotation 3591.84
+
 #define motor1_speed 319//adjust for speed of motor 1, out of 400
 #define motor2_speed 307//adjust for speed of motor 2, out of 400
 #define car_speed 0.39//speed of the car in m/s
